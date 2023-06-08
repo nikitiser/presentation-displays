@@ -81,6 +81,38 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
                     result.error(call.method, e.message, null)
                 }
             }
+            "stopPresentation" -> {
+                try {
+                    val obj = JSONObject(call.arguments as String)
+                    Log.i(
+                        TAG,
+                        "Channel: method: ${call.method} | displayId: ${obj.getInt("displayId")} | routerName: ${
+                            obj.getString("routerName")
+                        }"
+                    )
+                    val displayId: Int = obj.getInt("displayId")
+                    val tag: String = obj.getString("routerName")
+                    val display = displayManager?.getDisplay(displayId)
+                    if (display != null) {
+                        val flutterEngine = createFlutterEngine(tag)
+                        flutterEngine?.let {
+                            flutterEngineChannel = MethodChannel(
+                                it.dartExecutor.binaryMessenger,
+                                "${viewTypeId}_engine"
+                            )
+                            val presentation =
+                                context?.let { it1 -> PresentationDisplay(it1, tag, display) }
+                            Log.i(TAG, "presentation: $presentation")
+                            presentation?.hide()
+                            result.success(true)
+                        } ?: result.error("404", "Can't find FlutterEngine", null)
+                    } else {
+                        result.error("404", "Can't find display with displayId is $displayId", null)
+                    }
+                } catch (e: Exception) {
+                    result.error(call.method, e.message, null)
+                }
+            }
             "listDisplay" -> {
                 val listJson = ArrayList<DisplayJson>()
                 val category = call.arguments

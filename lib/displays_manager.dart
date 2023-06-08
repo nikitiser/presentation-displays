@@ -9,6 +9,7 @@ import 'package:presentation_displays/secondary_display.dart';
 const _listDisplay = "listDisplay";
 const _showPresentation = "showPresentation";
 const _transferDataToPresentation = "transferDataToPresentation";
+const _stopPresentation = "stopPresentation";
 
 /// Display category: secondary display.
 /// <p>
@@ -21,7 +22,7 @@ const _transferDataToPresentation = "transferDataToPresentation";
 /// Use the following methods to query the real display area:
 /// [DisplayManager.getDisplays], [DisplayManager.getNameByDisplayId],
 /// [DisplayManager.getNameByIndex], [DisplayManager.showSecondaryDisplay],
-/// [DisplayManager.transferDataToPresentation]
+/// [DisplayManager.transferDataToPresentation], [DisplayManager.stopSecondaryDisplay]
 /// </p>
 ///
 /// [DisplayManager.getDisplays]
@@ -117,6 +118,25 @@ class DisplayManager {
         "\"displayId\": $displayId,"
         "\"routerName\": \"$routerName\""
         "}");
+  }
+
+  /// Stops presentation mode and revert back to mirror mode
+  /// <p>
+  /// After displaying a secondary display, you can disable or revert them back by providing [displayId] and [routerName].
+  /// If we can't find the router name, the secondary display a blank screen
+  /// [displayId] The id of display to which the secondary display should be attached.
+  /// [routerName] The screen you want to display on the secondary display.
+  /// </P>
+  ///
+  /// return [Future<bool>] about the status has been display or not
+  Future<bool?>? stopSecondaryDisplay(
+      {required int displayId, required String routerName}) {
+    return _displayMethodChannel?.invokeMethod<bool?>(
+        _stopPresentation,
+        "{"
+            "\"displayId\": $displayId,"
+            "\"routerName\": \"$routerName\""
+            "}");
   }
 
   /// Transfer data to a secondary display
