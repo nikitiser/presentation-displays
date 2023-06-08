@@ -70,7 +70,7 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
                             )
                             val presentation =
                                 context?.let { it1 -> PresentationDisplay(it1, tag, display) }
-                            Log.i(TAG, "presentation: $presentation")
+                            Log.i(TAG, "presentation: This will serve as a tests")
                             presentation?.dismiss()
                             result.success(true)
                         } ?: result.error("404", "Can't find FlutterEngine", null)
