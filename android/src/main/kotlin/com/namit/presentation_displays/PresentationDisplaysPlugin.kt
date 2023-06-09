@@ -6,7 +6,6 @@ import android.hardware.display.DisplayManager
 import android.util.Log
 import android.view.Display
 import androidx.annotation.NonNull
-import androidx.core.content.ContextCompat.getSystemService
 import com.google.gson.Gson
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
@@ -26,6 +25,7 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
     private var flutterEngineChannel: MethodChannel? = null
     private var displayManager: DisplayManager? = null
     private var context: Context? = null
+    private var mPresentation: PresentationDisplay? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, viewTypeId)
@@ -68,10 +68,10 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
                                 it.dartExecutor.binaryMessenger,
                                 "${viewTypeId}_engine"
                             )
-                            val presentation =
+                             mPresentation =
                                 context?.let { it1 -> PresentationDisplay(it1, tag, display) }
-                            Log.i(TAG, "presentation: $presentation")
-                            presentation?.show()
+                            Log.i(TAG, "presentation: $mPresentation")
+                            mPresentation?.show()
                             result.success(true)
                         } ?: result.error("404", "Can't find FlutterEngine", null)
                     } else {
@@ -100,10 +100,11 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
                                 it.dartExecutor.binaryMessenger,
                                 "${viewTypeId}_engine"
                             )
-                            val presentation =
-                                context?.let { it1 -> RemovePresentationDisplay(it1, tag, display) }
-                            Log.i(TAG, "presentation: ${presentation?.hide()}  :  ${presentation?.dismiss()}")
-                            presentation?.dismiss()
+                             mPresentation =
+                                context?.let { it1 -> PresentationDisplay(it1, tag, display) }
+                            Log.i(TAG, "presentation: ${mPresentation?.hide()}  :  ${mPresentation?.dismiss()}")
+                            mPresentation?.dismiss()
+                            mPresentation = null
                             result.success(true)
                         } ?: result.error("404", "Can't find FlutterEngine", null)
                     } else {
