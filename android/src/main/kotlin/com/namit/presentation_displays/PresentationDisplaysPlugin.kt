@@ -101,9 +101,9 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
                                 "${viewTypeId}_engine"
                             )
                             val presentation =
-                                context?.let { it1 -> PresentationDisplay(it1, tag, display) }
+                                context?.let { it1 -> RemovePresentationDisplay(it1, tag, display) }
                             Log.i(TAG, "presentation: ${presentation?.hide()}  :  ${presentation?.dismiss()}")
-                            presentation?.hide()
+                            presentation?.dismiss()
                             result.success(true)
                         } ?: result.error("404", "Can't find FlutterEngine", null)
                     } else {
