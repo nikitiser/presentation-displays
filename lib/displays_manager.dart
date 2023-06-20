@@ -33,10 +33,14 @@ const String DISPLAY_CATEGORY_PRESENTATION =
 /// Provide you with the method for you to work with [SecondaryDisplay].
 class DisplayManager {
   final _displayChannel = "presentation_displays_plugin";
-  MethodChannel? _displayMethodChannel;
+  final _displayEventChannelId = "presentation_displays_plugin_events";
+
+  late MethodChannel? _displayMethodChannel;
+  late EventChannel _displayEventChannel;
 
   DisplayManager() {
     _displayMethodChannel = MethodChannel(_displayChannel);
+    _displayEventChannel = EventChannel(_displayEventChannelId);
   }
 
   /// Gets all currently valid logical displays of the specified category.
@@ -120,22 +124,18 @@ class DisplayManager {
         "}");
   }
 
-  /// Stops presentation mode and revert back to mirror mode
+  /// Hides secondary display that is attached to the specified display
   /// <p>
-  /// After displaying a secondary display, you can disable or revert them back by providing [displayId] and [routerName].
-  /// If we can't find the router name, the secondary display a blank screen
   /// [displayId] The id of display to which the secondary display should be attached.
-  /// [routerName] The screen you want to display on the secondary display.
   /// </P>
   ///
   /// return [Future<bool>] about the status has been display or not
   Future<bool?>? stopSecondaryDisplay(
-      {required int displayId, required String routerName}) {
+      {required int displayId}) {
     return _displayMethodChannel?.invokeMethod<bool?>(
         _stopPresentation,
         "{"
-            "\"displayId\": $displayId,"
-            "\"routerName\": \"$routerName\""
+            "\"displayId\": $displayId"
             "}");
   }
 
