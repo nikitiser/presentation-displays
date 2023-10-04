@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.Display
 import androidx.annotation.NonNull
 import com.google.gson.Gson
+import io.flutter.FlutterInjector
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
@@ -150,8 +151,10 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
             return null
         if (FlutterEngineCache.getInstance().get(tag) == null) {
             val flutterEngine = FlutterEngine(context!!)
+            FlutterInjector.instance().flutterLoader().startInitialization(context!!)
+            val path = FlutterInjector.instance().flutterLoader().findAppBundlePath();
             val entrypoint = DartExecutor.DartEntrypoint(
-                FlutterLoader().findAppBundlePath(),
+                path,
                 "secondScreenMain"
             )
             flutterEngine.dartExecutor.executeDartEntrypoint(entrypoint)
