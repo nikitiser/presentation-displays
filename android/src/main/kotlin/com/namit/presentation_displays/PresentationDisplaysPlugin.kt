@@ -32,7 +32,7 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
     private var mPresentation: PresentationDisplay? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, viewTypeId)
+        channel = MethodChannel(flutterPluginBinding.binaryMessenger, viewTypeId)
         channel.setMethodCallHandler(this)
 
         eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, viewTypeEventsId)
