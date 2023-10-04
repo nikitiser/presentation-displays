@@ -145,16 +145,16 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
     private fun createFlutterEngine(tag: String): FlutterEngine? {
         if (context == null)
             return null
-        if (FlutterEngineCache.getInstance().get(tag) == null) {
+        
             val flutterEngine = FlutterEngine(context!!)
-            flutterEngine.navigationChannel.setInitialRoute(tag)
+            flutterEngine.navigationChannel.setInitialRoute('presentation')
             flutterEngine.dartExecutor.executeDartEntrypoint(
                 DartExecutor.DartEntrypoint.createDefault()
             )
             flutterEngine.lifecycleChannel.appIsResumed()
             // Cache the FlutterEngine to be used by FlutterActivity.
             FlutterEngineCache.getInstance().put(tag, flutterEngine)
-        }
+        
         return FlutterEngineCache.getInstance().get(tag)
     }
 
