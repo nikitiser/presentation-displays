@@ -92,6 +92,7 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
                                 context?.let { it1 -> PresentationDisplay(it1, tag, display) }
                             Log.i(TAG, "presentation: $mPresentation")
                             mPresentation?.show()
+                            flutterEngine.navigationChannel.pushRoute(tag)
                             result.success(true)
                         } ?: result.error("404", "Can't find FlutterEngine", null)
                     } else {
