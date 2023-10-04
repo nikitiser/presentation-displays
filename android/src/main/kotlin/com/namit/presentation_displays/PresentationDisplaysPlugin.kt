@@ -12,6 +12,7 @@ import com.google.gson.Gson
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.embedding.engine.loader.FlutterLoader
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -19,6 +20,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
+import io.flutter.view.FlutterMain
 import org.json.JSONObject
 
 /** PresentationDisplaysPlugin */
@@ -32,7 +34,7 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
     private var mPresentation: PresentationDisplay? = null
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.binaryMessenger, viewTypeId)
+        channel = MethodChannel(flutterPluginBinding.flutterEngine.dartExecutor, viewTypeId)
         channel.setMethodCallHandler(this)
 
         eventChannel = EventChannel(flutterPluginBinding.binaryMessenger, viewTypeEventsId)
@@ -148,10 +150,11 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
             return null
         if (FlutterEngineCache.getInstance().get(tag) == null) {
             val flutterEngine = FlutterEngine(context!!)
-            flutterEngine.navigationChannel.setInitialRoute(tag)
-            flutterEngine.dartExecutor.executeDartEntrypoint(
-                DartExecutor.DartEntrypoint.createDefault()
+            val entrypoint = DartExecutor.DartEntrypoint(
+                FlutterLoader().findAppBundlePath(),
+                "yourSecondaryMainFunction"
             )
+            flutterEngine.dartExecutor.executeDartEntrypoint(entrypoint)
             flutterEngine.lifecycleChannel.appIsResumed()
             // Cache the FlutterEngine to be used by FlutterActivity.
             FlutterEngineCache.getInstance().put(tag, flutterEngine)
