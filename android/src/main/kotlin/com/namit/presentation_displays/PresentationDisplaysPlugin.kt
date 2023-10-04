@@ -152,7 +152,7 @@ class PresentationDisplaysPlugin : FlutterPlugin, ActivityAware, MethodChannel.M
             val flutterEngine = FlutterEngine(context!!)
             val entrypoint = DartExecutor.DartEntrypoint(
                 FlutterLoader().findAppBundlePath(),
-                "yourSecondaryMainFunction"
+                "secondScreenMain"
             )
             flutterEngine.dartExecutor.executeDartEntrypoint(entrypoint)
             flutterEngine.lifecycleChannel.appIsResumed()
